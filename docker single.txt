@@ -2,3 +2,36 @@ docker pull redis
   docker run --name my-redis -d redis
   docker ps
   docker exec -it my-redis redis-cli
+docker stop my-redis
+docker start my-redis
+docker rm my-redis
+
+working with docker(git bash)
+mkdir redis
+cd redis
+touch filename
+start filename 
+FROM redis:latest
+CMD["redis-server"]
+
+docker build -t redisnew
+docker run --name myredisnew -d redisnew
+docker ps
+docker stop myredis new
+docker login
+docker ps -a
+docker commit <con id> <username>/my-redis
+docker images
+docker push <username>/my-redis
+docker rm <con id>
+docker rmi <user name>/my-redis
+ps -a
+docker logout
+pull
+docker run --name myredis -d <username>/my-redis
+docker exec -it myredis redils-cli
+
+docker run -p 8080:5000 --name webapp redis
+docker tag redis old_api(to delete one image)
+docker save -o image.tar myapi
+docker run --restart=always myapi
