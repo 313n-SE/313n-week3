@@ -1,0 +1,282 @@
+# WEEK 10 – JENKINS PIPELINE CREATION USING SCRIPT
+
+## EXPERIMENT 1: CREATE A SIMPLE JENKINS PIPELINE
+
+### Step 1: Open Jenkins
+1. Open your browser.
+2. Enter http://localhost:8080
+3. Login to Jenkins.
+4. Click New Item on the left side.
+
+### Step 2: Create Pipeline Project
+1. Enter project name: Maven_Pipeline
+2. Select Pipeline.
+3. Click OK.
+
+### Step 3: Configure General
+1. Open the General section.
+2. Enter Description: Jenkins pipeline for Maven.
+3. Configure other options if required.
+
+### Step 4: Configure Pipeline
+1. Open the Pipeline section.
+2. In Definition, select Pipeline script.
+3. A script editor will appear.
+4. Copy and paste the following code.
+
+### CODE 1: SIMPLE JENKINS PIPELINE
+
+pipeline {
+    agent any
+
+    stages {
+        stage('Hello 1') {
+            steps {
+                echo 'Hello World'
+            }
+        }
+
+        stage('Hello3') {
+            steps {
+                echo 'Hello 3'
+            }
+        }
+    }
+}
+
+### Step 5: Save and Run
+1. Click Apply.
+2. Click Save.
+3. Open the pipeline project.
+4. Click Build Now.
+5. Wait for the execution to complete.
+6. Open Console Output.
+7. Check whether Hello World and Hello 3 messages are displayed.
+8. Verify that the pipeline build is successful.
+
+RESULT:
+Successfully created and executed a simple Jenkins pipeline using Pipeline Script.
+
+---
+
+# EXPERIMENT 2: CREATE JENKINS PIPELINE FOR MAVEN JAVA PROJECT USING GITHUB
+
+### Step 1: Open Jenkins
+1. Open your browser.
+2. Enter http://localhost:8080
+3. Login to Jenkins.
+4. Click New Item.
+
+### Step 2: Create Pipeline Project
+1. Enter project name: Maven_Java_Pipeline
+2. Select Pipeline.
+3. Click OK.
+
+### Step 3: Configure General
+1. Open General.
+2. Enter Description: Java project.
+
+### Step 4: Configure Pipeline Script
+1. Open the Pipeline section.
+2. Under Definition, select Pipeline script.
+3. Copy and paste the following code.
+
+### CODE 2: MAVEN JAVA PIPELINE
+
+pipeline {
+    agent any
+
+    tools {
+        maven 'MAVEN-HOME'
+    }
+
+    stages {
+
+        stage('git repo & clean') {
+            steps {
+                bat "git clone YOUR_GITHUB_REPOSITORY_URL"
+                bat "mvn clean -f mavenjava"
+            }
+        }
+
+        stage('install') {
+            steps {
+                bat "mvn install -f mavenjava"
+            }
+        }
+
+        stage('test') {
+            steps {
+                bat "mvn test -f mavenjava"
+            }
+        }
+
+        stage('package') {
+            steps {
+                bat "mvn package -f mavenjava"
+            }
+        }
+    }
+}
+
+### Step 5: Modify the Code
+1. Replace YOUR_GITHUB_REPOSITORY_URL with your actual GitHub repository URL.
+2. Check the Maven installation name in Jenkins.
+3. If your Maven installation name is MAVEN_HOME, replace MAVEN-HOME with MAVEN_HOME.
+4. Check the project folder name.
+5. If the project folder name is different from mavenjava, update it in all Maven commands.
+
+### Step 6: Save and Run
+1. Click Apply.
+2. Click Save.
+3. Open Maven_Java_Pipeline.
+4. Click Build Now.
+5. Wait for all stages to execute.
+6. Open Console Output.
+7. Check the execution of all four stages:
+   - git repo & clean
+   - install
+   - test
+   - package
+8. Verify that the pipeline is successful.
+
+RESULT:
+Successfully created and executed a Jenkins pipeline for a Maven Java project using GitHub.
+
+---
+
+# EXPERIMENT 3: CONFIGURE BUILD TRIGGERS FOR JENKINS PIPELINE
+
+## A. Configure GitHub Push Trigger
+
+### Step 1: Open Jenkins
+1. Open http://localhost:8080
+2. Login to Jenkins.
+3. Open the previously created Maven_Java_Pipeline.
+4. Click Configure.
+
+### Step 2: Configure Build Triggers
+1. Open the Build Triggers section.
+2. Select GitHub hook trigger for GITScm polling.
+3. Click Apply.
+4. Click Save.
+
+### Step 3: Trigger Pipeline
+1. Make a change in your GitHub repository.
+2. Commit and push the changes.
+3. Jenkins will trigger the pipeline when the GitHub webhook is correctly configured.
+
+RESULT:
+Successfully configured GitHub push trigger for Jenkins pipeline.
+
+## B. Configure Build Periodically (6 PM)
+
+### Step 1: Open Pipeline Configuration
+1. Open Jenkins.
+2. Select Maven_Java_Pipeline.
+3. Click Configure.
+
+### Step 2: Configure Build Trigger
+1. Open Build Triggers.
+2. Select Build periodically.
+3. In the Schedule box, enter:
+
+0 18 * * *
+
+4. Click Apply.
+5. Click Save.
+
+RESULT:
+The Jenkins pipeline is scheduled to execute every day at 6 PM.
+
+---
+
+# IMPORTANT PIPELINE CODES TO REMEMBER
+
+## 1. Maven Clean
+
+bat "mvn clean -f mavenjava"
+
+## 2. Maven Install
+
+bat "mvn install -f mavenjava"
+
+## 3. Maven Test
+
+bat "mvn test -f mavenjava"
+
+## 4. Maven Package
+
+bat "mvn package -f mavenjava"
+
+## 5. Git Clone
+
+bat "git clone YOUR_GITHUB_REPOSITORY_URL"
+
+## 6. Print Welcome Message
+
+stage('Welcome') {
+    steps {
+        echo 'Welcome to Jenkins Pipeline'
+    }
+}
+
+## 7. Print Build Number
+
+echo "Build number: ${env.BUILD_NUMBER}"
+
+## 8. Compile Java File
+
+stage('Compile') {
+    steps {
+        bat 'javac Hello.java'
+    }
+}
+
+## 9. Test Stage
+
+stage('Test') {
+    steps {
+        bat 'mvn test -f mavenjava/pom.xml'
+    }
+}
+
+## 10. Package Stage
+
+stage('Package') {
+    steps {
+        bat 'mvn package -f mavenjava/pom.xml'
+    }
+}
+
+---
+
+# IMPORTANT POINTS TO REMEMBER
+
+1. Jenkins URL: http://localhost:8080
+2. Job type: Pipeline.
+3. Definition: Pipeline script.
+4. agent any: Allows the pipeline to run on any available agent.
+5. stages: Contains different stages of the pipeline.
+6. stage: Represents an individual task.
+7. steps: Contains commands to execute.
+8. echo: Prints a message in the console.
+9. tools: Specifies the configured Maven installation.
+10. bat: Executes commands on Windows.
+11. sh: Executes commands on Linux.
+12. mvn clean: Removes previous build output.
+13. mvn install: Builds and installs the project.
+14. mvn test: Executes test cases.
+15. mvn package: Generates the JAR or WAR package according to the project configuration.
+
+## IMPORTANT DIFFERENCE
+
+Windows:
+bat "mvn clean install"
+
+Linux:
+sh "mvn clean install"
+
+## FINAL CONCLUSION
+
+In this experiment, we learned to create Jenkins pipelines using pipeline scripts, integrate Maven projects with GitHub, execute Maven commands, configure build triggers, and automate the build process.
