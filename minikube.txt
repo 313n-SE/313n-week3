@@ -1,0 +1,593 @@
+# WEEK 12 – WORKING WITH MINIKUBE AND NAGIOS
+
+# EXPERIMENT 1: INSTALL AND SET UP MINIKUBE
+
+## Step 1: Install Prerequisites
+
+1. Open Docker Desktop.
+2. Make sure Docker is running.
+3. Ensure virtualization is enabled on your system.
+4. Minikube supports different drivers:
+   - Hyper-V
+   - VirtualBox
+   - Docker
+
+## Step 2: Download Minikube
+
+1. Open PowerShell or Command Prompt as Administrator.
+2. Download Minikube using the following command:
+
+curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-installer.exe
+
+3. Install Minikube using:
+
+.\minikube-installer.exe
+
+## Step 3: Add Minikube to PATH
+
+1. Open Windows Search.
+2. Search for Environment Variables.
+3. Click Edit the system environment variables.
+4. Click Environment Variables.
+5. Select Path.
+6. Click Edit.
+7. Add the Minikube installation directory.
+
+Example:
+
+C:\Program Files\Minikube
+
+8. Click OK and save the changes.
+
+## Step 4: Start Minikube
+
+1. Open Command Prompt or PowerShell.
+2. Start Minikube using:
+
+minikube start
+
+If using Docker driver:
+
+minikube start --driver=docker
+
+If using Hyper-V:
+
+minikube start --driver=hyperv
+
+3. Wait until Minikube starts successfully.
+
+## Step 5: Check Minikube Status
+
+Enter:
+
+minikube status
+
+## Step 6: Check Minikube Version
+
+minikube version
+
+## Step 7: Check kubectl Version
+
+kubectl version --client
+
+## Step 8: Check Pods
+
+minikube kubectl -- get pods -A
+
+## Step 9: Open Minikube Dashboard
+
+minikube dashboard
+
+The Kubernetes dashboard opens in the browser.
+
+RESULT:
+Successfully installed and started Minikube and opened the Kubernetes dashboard.
+
+---
+
+# EXPERIMENT 2: CREATE AND MANAGE DEPLOYMENTS IN MINIKUBE
+
+## Step 1: Start Minikube Cluster
+
+1. Open Command Prompt.
+2. Enter:
+
+minikube start
+
+3. Wait until the cluster starts successfully.
+
+## Step 2: Check Kubernetes Resources
+
+Execute the following commands one by one.
+
+1. Get Pods:
+
+kubectl get pods
+
+2. Get Deployments:
+
+kubectl get deployments
+
+3. Get Services:
+
+kubectl get services
+
+4. Get ReplicaSets:
+
+kubectl get replicasets
+
+5. Get Nodes:
+
+kubectl get nodes
+
+6. Get All Resources:
+
+kubectl get all
+
+## Step 3: Create Nginx Deployment
+
+1. Create a deployment named mynginx.
+2. Use the Nginx Docker image.
+
+Command:
+
+kubectl create deployment mynginx --image=nginx
+
+3. Wait until the deployment is created.
+
+If the deployment is already created and you want to update its image, use:
+
+kubectl set image deployment/mynginx nginx=nginx:latest
+
+## Step 4: Check Pods
+
+kubectl get pods
+
+## Step 5: Check Deployments
+
+kubectl get deployments
+
+Verify that mynginx appears in the output.
+
+## Step 6: Describe Pods
+
+kubectl describe pods
+
+This displays detailed information about the Pods.
+
+## Step 7: Check Services
+
+kubectl get services
+
+## Step 8: Expose Deployment as a Service
+
+1. Expose the Nginx deployment.
+2. Create a NodePort service.
+
+Command:
+
+kubectl expose deployment mynginx --type=NodePort --port=80 --target-port=80
+
+3. Check the services:
+
+kubectl get services
+
+## Step 9: Scale the Deployment
+
+1. Scale the Nginx deployment to 4 replicas.
+2. Execute:
+
+kubectl scale deployment mynginx --replicas=4
+
+3. Check the deployment:
+
+kubectl get deployments
+
+4. Check the Pods:
+
+kubectl get pods
+
+5. Verify that 4 Pods are running.
+
+## Step 10: Check Service
+
+kubectl get service mynginx
+
+## Step 11: Access Nginx Application Using Port Forwarding
+
+1. Execute the following command:
+
+kubectl port-forward svc/mynginx 8084:80
+
+2. Keep the terminal running.
+3. Open your browser.
+4. Enter:
+
+http://localhost:8084
+
+5. The Nginx Welcome page will appear.
+
+## Step 12: Alternative Method Using Minikube Tunnel
+
+If there is an error accessing the application, the document provides this alternative.
+
+1. Start the Minikube tunnel:
+
+minikube tunnel
+
+2. Retrieve the service URL:
+
+minikube service mynginx --url
+
+3. Open the generated URL in your browser.
+
+## Step 13: Open Kubernetes Dashboard
+
+1. Open Command Prompt.
+2. Enter:
+
+minikube dashboard
+
+3. Wait until the dashboard opens.
+4. Explore:
+   - Deployments
+   - Pods
+   - ReplicaSets
+   - Services
+
+## Step 14: Stop and Clean Up
+
+Delete the Nginx deployment:
+
+kubectl delete deployment mynginx
+
+Delete the Nginx service:
+
+kubectl delete service mynginx
+
+Stop Minikube (Optional):
+
+minikube stop
+
+Delete Minikube cluster (Optional):
+
+minikube delete
+
+RESULT:
+Successfully created, managed, exposed, scaled and accessed Nginx deployment using Minikube and Kubernetes.
+
+---
+
+# EXPERIMENT 3: INSTALL AND RUN NAGIOS USING DOCKER
+
+## Step 1: Open Docker Desktop
+
+1. Open Docker Desktop.
+2. Wait until Docker is running.
+3. Open Command Prompt or PowerShell.
+
+## Step 2: Pull Nagios Docker Image
+
+Execute:
+
+docker pull jasonrivers/nagios:latest
+
+3. Wait until the image is downloaded successfully.
+
+## Step 3: Run Nagios Container
+
+Execute:
+
+docker run --name nagiosdemo -p 8888:80 jasonrivers/nagios:latest
+
+4. Wait until Nagios starts successfully.
+5. Keep the terminal running.
+
+## Step 4: Access Nagios Dashboard
+
+1. Open your browser.
+2. Enter:
+
+http://localhost:8888
+
+3. Login using the following credentials:
+
+Username: nagiosadmin
+
+Password: nagios
+
+## Step 5: Explore Nagios Dashboard
+
+After login, explore the following sections:
+
+1. Hosts:
+   View the systems being monitored.
+
+2. Services:
+   Check the services being monitored, such as CPU usage.
+
+3. Alerts:
+   View recent notifications.
+
+## Step 6: Monitor Host Details
+
+1. Navigate to the Hosts menu.
+2. Select a host.
+3. Open Host Information.
+
+Observe the following:
+
+- Host Status: Indicates whether the system is UP or DOWN.
+- Metrics: View CPU usage, memory status and network activity.
+- Actions: Reschedule checks, disable notifications or schedule downtime.
+
+## Step 7: Stop Nagios Container
+
+Open another Command Prompt or PowerShell window.
+
+Execute:
+
+docker stop nagiosdemo
+
+## Step 8: Delete Nagios Container
+
+docker rm nagiosdemo
+
+## Step 9: List Docker Images
+
+docker images
+
+## Step 10: Remove Nagios Image (Optional)
+
+docker rmi jasonrivers/nagios:latest
+
+RESULT:
+Successfully installed and ran Nagios using Docker, accessed the Nagios dashboard and monitored host and service information.
+
+---
+
+# EXPERIMENT 4: CREATE AWS FREE TIER ACCOUNT
+
+## Step 1: Open AWS Website
+
+1. Open your browser.
+2. Visit:
+
+https://aws.amazon.com
+
+3. Click Create an AWS Account.
+
+## Step 2: Enter Account Details
+
+1. Enter your email ID.
+2. Enter your account name.
+3. Complete the account creation details.
+4. Enter the verification code received in your email.
+
+## Step 3: Enter Contact Details
+
+1. Provide your contact details.
+2. Accept the terms and conditions.
+3. Click Create.
+
+## Step 4: Enter Billing Details
+
+1. Provide your billing details.
+2. Click Verify and Continue.
+3. Complete the payment verification process.
+
+NOTE:
+The document mentions a temporary ₹2 verification charge that is credited back after verification. Actual verification charges and policies may vary.
+
+## Step 5: Verify Mobile Number
+
+1. Select your country.
+2. Enter your working mobile number.
+3. Click Send SMS.
+4. Enter the verification code received on your mobile.
+
+## Step 6: Select Support Plan
+
+1. Select the Basic plan.
+2. Click Complete Sign Up.
+
+## Step 7: Open AWS Management Console
+
+1. Wait until account creation is completed.
+2. Click AWS Management Console.
+3. Sign in to AWS.
+
+## Step 8: Select Role and Interest
+
+1. Select Role as Academic/Researcher.
+2. Select Interest as DevOps.
+3. Click Submit.
+
+## Step 9: Sign in to AWS Console
+
+1. Select Root user.
+2. Enter your registered email address.
+3. Enter your password.
+4. Complete verification if required.
+5. Open AWS Management Console.
+
+RESULT:
+Successfully created an AWS account and accessed the AWS Management Console.
+
+---
+
+# IMPORTANT COMMANDS TO REMEMBER
+
+## A. MINIKUBE COMMANDS
+
+1. Start Minikube:
+
+minikube start
+
+2. Start Minikube using Docker:
+
+minikube start --driver=docker
+
+3. Check Minikube status:
+
+minikube status
+
+4. Check Minikube version:
+
+minikube version
+
+5. Open Dashboard:
+
+minikube dashboard
+
+6. Stop Minikube:
+
+minikube stop
+
+7. Delete Minikube:
+
+minikube delete
+
+8. Check Minikube logs:
+
+minikube logs
+
+9. Check for updates:
+
+minikube update-check
+
+## B. KUBERNETES COMMANDS
+
+1. Get Pods:
+
+kubectl get pods
+
+2. Get Deployments:
+
+kubectl get deployments
+
+3. Get Services:
+
+kubectl get services
+
+4. Get ReplicaSets:
+
+kubectl get replicasets
+
+5. Get Nodes:
+
+kubectl get nodes
+
+6. Get All Resources:
+
+kubectl get all
+
+7. Describe Pods:
+
+kubectl describe pods
+
+8. Create Deployment:
+
+kubectl create deployment mynginx --image=nginx
+
+9. Update Image:
+
+kubectl set image deployment/mynginx nginx=nginx:latest
+
+10. Expose Deployment:
+
+kubectl expose deployment mynginx --type=NodePort --port=80 --target-port=80
+
+11. Scale Deployment:
+
+kubectl scale deployment mynginx --replicas=4
+
+12. Check Service:
+
+kubectl get service mynginx
+
+13. Port Forwarding:
+
+kubectl port-forward svc/mynginx 8084:80
+
+14. Access Nginx:
+
+http://localhost:8084
+
+15. Delete Deployment:
+
+kubectl delete deployment mynginx
+
+16. Delete Service:
+
+kubectl delete service mynginx
+
+17. Start Minikube Tunnel:
+
+minikube tunnel
+
+18. Get Service URL:
+
+minikube service mynginx --url
+
+## C. DOCKER COMMANDS
+
+1. Pull Nagios Image:
+
+docker pull jasonrivers/nagios:latest
+
+2. Run Nagios Container:
+
+docker run --name nagiosdemo -p 8888:80 jasonrivers/nagios:latest
+
+3. Access Nagios:
+
+http://localhost:8888
+
+4. Stop Container:
+
+docker stop nagiosdemo
+
+5. Remove Container:
+
+docker rm nagiosdemo
+
+6. List Docker Images:
+
+docker images
+
+7. Remove Nagios Image:
+
+docker rmi jasonrivers/nagios:latest
+
+---
+
+# IMPORTANT VALUES TO REMEMBER
+
+Minikube Deployment Name: mynginx
+
+Docker Image for Nginx: nginx
+
+Number of Replicas: 4
+
+Nginx Port: 80
+
+Port Forwarding Port: 8084
+
+Nginx URL: http://localhost:8084
+
+Nagios Docker Image: jasonrivers/nagios:latest
+
+Nagios Container Name: nagiosdemo
+
+Nagios Port: 8888
+
+Nagios URL: http://localhost:8888
+
+Nagios Username: nagiosadmin
+
+Nagios Password: nagios
+
+## FINAL CONCLUSION
+
+In this experiment, we learned how to install and work with Minikube, create and manage Kubernetes deployments, scale Pods, expose Nginx applications using services and port forwarding, run Nagios using Docker for infrastructure monitoring, and create an AWS account.
