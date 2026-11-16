@@ -94,6 +94,7 @@ pipeline {
 
         stage('git repo & clean') {
             steps {
+                bar "if exist jar1 rmdir /s /q jar1"
                 bat "git clone YOUR_GITHUB_REPOSITORY_URL"
                 bat "mvn clean -f mavenjava"
             }
